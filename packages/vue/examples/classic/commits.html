@@ -1,76 +1,47 @@
 <script src="../../dist/vue.global.js"></script>
 
 <div id="demo">
-  <h1>Latest Vue.js Commits</h1>
-  <template v-for="branch in branches">
-    <input type="radio"
-      :id="branch"
-      :value="branch"
-      name="branch"
-      v-model="currentBranch">
-    <label :for="branch">{{ branch }}</label>
-  </template>
-  <p>vuejs/core@{{ currentBranch }}</p>
-  <ul>
-    <li v-for="{ html_url, sha, author, commit } in commits">
-      <a :href="html_url" target="_blank" class="commit">{{ sha.slice(0, 7) }}</a>
-      - <span class="message">{{ truncate(commit.message) }}</span><br>
-      by <span class="author"><a :href="author.html_url" target="_blank">{{ commit.author.name }}</a></span>
-      at <span class="date">{{ formatDate(commit.author.date) }}</span>
-    </li>
-  </ul>
+  <!-- 这里可以留空，Vue 会替换这个元素 -->
 </div>
 
 <script>
-const API_URL = `https://api.github.com/repos/vuejs/core/commits?per_page=3&sha=`
+  const { createApp, h } = Vue
 
-Vue.createApp({
-  data: () => ({
-    branches: ['main', 'v2-compat'],
-    currentBranch: 'main',
-    commits: null
-  }),
-
-  created() {
-    this.fetchData()
-  },
-
-  watch: {
-    currentBranch: 'fetchData'
-  },
-
-  methods: {
-    fetchData() {
-      fetch(`${API_URL}${this.currentBranch}`)
-        .then(res => res.json())
-        .then(data => {
-          this.commits = data
-        })
+  debugger
+  const HelloWorld2 = {
+    data() {
+      return {
+        message: 'Hello, World!'
+      }
     },
-    truncate(v) {
-      const newline = v.indexOf('\n')
-      return newline > 0 ? v.slice(0, newline) : v
-    },
-    formatDate(v) {
-      return v.replace(/T|Z/g, ' ')
+    render() {
+      // 使用 this.message 来获取数据
+      return h('div', {}, [
+        h('h1', {}, this.message),
+        h('h1', {}, this.message)
+      ])
     }
   }
-}).mount('#demo')
-</script>
 
-<style>
-  #demo {
-    font-family: 'Helvetica', Arial, sans-serif;
+  const HelloWorld = {
+    data() {
+      return {
+        message: 'Hello, World!'
+      }
+    },
+    render() {
+      // 使用 this.message 来获取数据
+      return h('div', {}, [
+        h('h1', {}, this.message),
+        h('div', {}, [h(HelloWorld2)])
+      ])
+    }
   }
-  a {
-    text-decoration: none;
-    color: #f66;
-  }
-  li {
-    line-height: 1.5em;
-    margin-bottom: 20px;
-  }
-  .author, .date {
-    font-weight: bold;
-  }
-</style>
+ 
+  createApp({
+    render() {
+      // 使用 h 函数来渲染 HelloWorld 组件
+      return h(HelloWorld)
+    }
+  }).mount('#demo')
+</script>
